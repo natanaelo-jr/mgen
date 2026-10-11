@@ -1,0 +1,20 @@
+[project]
+name = "mgen"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "natan", email = "natanael0junior@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.4",
+    "pretty-midi>=0.2.11.post0",
+]
+
+[project.scripts]
+mgen = "mgen:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
