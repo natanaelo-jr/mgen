@@ -25,22 +25,25 @@ GRAMMAR = {
 }
 
 
-def expand(symbol):
+def expand(symbol, bars=None, rng=random):
     if symbol not in GRAMMAR:
         return Node(symbol=symbol)
 
-    productions = GRAMMAR[symbol]
-    alternatives, weights = zip(*productions)
+    if symbol == "S" and bars is not None:
+        selected = ["B"] * bars
+    else:
+        productions = GRAMMAR[symbol]
+        alternatives, weights = zip(*productions)
 
-    selected = random.choices(
-        alternatives,
-        weights=weights,
-        k=1,
-    )[0]
+        selected = rng.choices(
+            alternatives,
+            weights=weights,
+            k=1,
+        )[0]
 
     return Node(
         symbol=symbol,
-        children=[expand(child) for child in selected],
+        children=[expand(child, rng=rng) for child in selected],
     )
 
 
@@ -107,7 +110,7 @@ RHYTHMIC_PATTERNS = {
 }
 
 
-def generate_rhythm_events(tree):
+def generate_rhythm_events(tree, rng=random):
     """
     Converte as folhas U1/U2 em eventos rítmicos.
 
@@ -123,7 +126,7 @@ def generate_rhythm_events(tree):
         patterns = RHYTHMIC_PATTERNS[symbol]
 
         # Escolhe um padrão disponível para esta unidade.
-        pattern_name = random.choice(list(patterns.keys()))
+        pattern_name = rng.choice(list(patterns.keys()))
         pattern = patterns[pattern_name]
 
         for offset, duration, kind in pattern:

@@ -173,6 +173,7 @@ def choose_toward(
     steps_left: int,
     P: np.ndarray,
     cadence_strength: float = 1.0,
+    rng=random,
 ) -> str:
     """Sorteia o próximo acorde sabendo que o alvo deve ser atingido em steps_left transições."""
     reach = np.linalg.matrix_power(P, steps_left - 1)[:, IDX[target_name]]
@@ -184,7 +185,7 @@ def choose_toward(
             f"{target_name} inalcançável a partir de {current_name} em {steps_left} passos"
         )
 
-    return random.choices(NAMES, weights=weights, k=1)[0]
+    return rng.choices(NAMES, weights=weights, k=1)[0]
 
 
 def generate_progression(
@@ -193,6 +194,7 @@ def generate_progression(
     cycle_bars: int = 4,
     temperature: float = 1.0,
     cadence_strength: float = 1.0,
+    rng=random,
 ) -> list[ChordState]:
     if bars < 1:
         raise ValueError("bars precisa ser pelo menos 1")
@@ -212,7 +214,7 @@ def generate_progression(
         steps_left = boundary - step + 1
 
         name = choose_toward(
-            progression[-1].name, "Imaj7", steps_left, P, cadence_strength
+            progression[-1].name, "Imaj7", steps_left, P, cadence_strength, rng=rng
         )
         progression.append(CHORDS[name])
     progression.append(CHORDS["Imaj7"])  # Garante a tônica no final
